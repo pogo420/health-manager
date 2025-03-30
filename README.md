@@ -1,5 +1,5 @@
 # health-manager
-Application for managing health.
+REST API for managing health.
 
 ## What it does?
 - Provides endpoints to update steps and weight.
@@ -10,9 +10,14 @@ Application for managing health.
 |Component|Tech|
 |---|---|
 |Webframework | FastApi |
+|Ut framework | Pytest |
 |DB | Sqlite |
-|Recommendation Engines | AI/ML|
+|Recommendation Engines | AI/ML/Neural|
 
-## Roadmap:
-- Initial development in progress.
-  
+## Current dev:
+- Current plan [docs](./docs/v1/plan_v1.md)
+
+## Roadmap/TODO:
+- Security features.
+- Rate limiting.
+- Profiling and telemetry.
