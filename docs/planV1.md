@@ -14,12 +14,12 @@
 - user api(GET/POST/UPDATE/DELETE)
 - step api(GET/POST/UPDATE/DELETE)
 - weight api(GET/POST/UPDATE/DELETE)
-- height api(GET/POST/UPDATE/DELETE)
+- ~~height api(GET/POST/UPDATE/DELETE)~~ *Not required*
 - report api(GET)
 
 ## Next step
-- Design the db.
+- Design the [db](db_plan_v1.md).
 - Design the ML algorithms.
-- Design the end points.
+- Design the [end points](endpoints_v1.md).
 - Design the rest.
 - Deployments/CICD.
