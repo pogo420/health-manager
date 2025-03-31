@@ -177,4 +177,4 @@ cython_debug/
 .vscode
 
 # Local db
-*.db
+db

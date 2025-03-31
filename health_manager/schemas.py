@@ -24,3 +24,8 @@ class AppInfo(BaseModel):
     app_name: str
     app_version: str
     app_env: AppEnv
+
+
+class ErrorMessage(BaseModel):
+    """Structure of all error message in application"""
+    detail: str

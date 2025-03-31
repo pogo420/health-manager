@@ -1,34 +1,21 @@
 """Rest server starts from this file.
 All routes are bridged here.
 """
-from contextlib import asynccontextmanager
 from fastapi import FastAPI, Depends
-from database import init_db
-from schemas import AppInfo
-from dependencies import get_app_info
-from log import get_logger
-import user.routes
-
+from health_manager.schemas import AppInfo
+from health_manager.dependencies import get_app_info
+from health_manager.log import get_logger
+from health_manager.database import engine, Base
+import health_manager.user.routes
 
 log = get_logger(__name__)
 
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Function for lifecycle management in fast api.
-    It does following:
-        - Defines db initialization before rest server initialization.
-    """
-    # DB initialization
-    init_db()
-    yield
-    # Server closure activities below
-    pass
+log.debug("Initializing db...")
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Rest API for health manager",
-    version=get_app_info().app_version,
-    lifespan=lifespan)
+    version=get_app_info().app_version)
 
 """Global Dependencies"""
 # Getting application information
@@ -45,4 +32,4 @@ def root(app_info: AppInfo = app_info):
 
 
 # Including routes
-app.include_router(user.routes.router)
+app.include_router(health_manager.user.routes.router)

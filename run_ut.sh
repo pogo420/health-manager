@@ -1,2 +1,2 @@
 export PYTHONPATH=health_manager
-pytest -- tests
+poetry run pytest -- tests

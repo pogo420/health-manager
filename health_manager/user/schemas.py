@@ -1,6 +1,7 @@
 """File containing user data transfer objects
 """
 from enum import Enum
+from typing import Optional
 from pydantic import BaseModel, Field
 
 
@@ -11,9 +12,13 @@ class Gender(Enum):
 
 
 class UserData(BaseModel):
-    """User data schema"""
-    user_id: str = Field(nullable=False)
-    user_name: str = Field(nullable=False)
-    gender: Gender = Field(nullable=True)
-    height: int = Field(gt=0, nullable=True)
-    birth_year: int = Field(gt=0, nullable=True)
+    """User data from client"""
+    user_name: str
+    gender: Optional[Gender]
+    height: Optional[int] = Field(gt=0)
+    birth_year: Optional[int] = Field(gt=0)
+
+
+class UserDbData(UserData):
+    """User data in db - single row"""
+    user_id: str

@@ -1,1 +1,2 @@
-python health_manager/server.py
+export PYTHONPATH=health_manager
+poetry run hm_app

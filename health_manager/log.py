@@ -3,7 +3,7 @@
 import logging
 import sys
 from typing import Optional
-from config import get_settings
+from health_manager.config import get_settings
 
 LOGGING_FORMATTER = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 

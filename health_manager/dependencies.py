@@ -1,9 +1,9 @@
 """Global rest api dependencies.
 """
 from sqlmodel import Session
-from config import Settings, get_settings
-from database import session
-from schemas import AppInfo
+from health_manager.config import Settings, get_settings
+from health_manager.database import session
+from health_manager.schemas import AppInfo
 
 
 def get_app_info() -> AppInfo:

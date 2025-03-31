@@ -2,9 +2,15 @@
 It loads the appropiate settings.
 """
 import uvicorn
+from health_manager.dependencies import get_api_settings
 
-if __name__ == "__main__":
+
+def run():
     uvicorn.run(
         "main:app",
-        reload=True
+        reload=get_api_settings().enable_reload
     )
+
+
+if __name__ == "__main__":
+    run()

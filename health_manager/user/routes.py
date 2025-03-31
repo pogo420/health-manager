@@ -1,13 +1,25 @@
-"""User routes definition
-"""
-from typing import Optional
-from fastapi import APIRouter, Depends
-from sqlmodel import Session
-from log import get_logger
-from dependencies import get_db_session
+"""User routes definitions.
 
-from user.service import UserService
-from user.schemas import UserData
+Currently we have sync endpoints for:
+- getting user data.
+
+TODO:
+    - updating user route.
+    - deleting user data.
+    - adding user.
+"""
+from fastapi import APIRouter, Depends, status
+from sqlmodel import Session
+from health_manager.schemas import ErrorMessage
+from health_manager.utils import error_response
+from health_manager.user.exceptions import (UserIdDataException,
+                                            UserInvalidException,
+                                            UserReadException,
+                                            UserWriteException)
+from health_manager.log import get_logger
+from health_manager.dependencies import get_db_session
+from health_manager.user.service import UserService
+from health_manager.user.schemas import UserData, UserDbData
 
 log = get_logger(__name__)
 db_session: Session = Depends(get_db_session)
@@ -18,10 +30,56 @@ router = APIRouter(
 )
 
 
-@router.get("/{user_id}", response_model=Optional[UserData])
+@router.get("/{user_id}", responses={
+    200: {"model": UserDbData},
+    404: {"model": ErrorMessage},
+    500: {"model": ErrorMessage}
+})
 def get_user(user_id: str, db_session: Session = db_session):
-    """Getting user information"""
-    log.debug(f"Handling user get request for id: {user_id}")
-    user: UserData = UserService(db_session).get_user(user_id)
-    log.debug(f"user info for id: {user_id}, is: {user}")
+    """Route for providing user information
+    """
+    log.info(f"Handling user get request for id: {user_id}")
+
+    user: UserDbData
+    try:
+        user: UserDbData = UserService(db_session).get_user(user_id)
+    except UserInvalidException:
+        log.error(f"User_id:{user_id} do not exist.")
+        return error_response(
+            status_code=status.HTTP_404_NOT_FOUND,
+            message=ErrorMessage(detail=f"User_id:{user_id} do not exist.")
+            )
+    except UserReadException:
+        log.error(f"Issue in querying data for user_id:{user_id}")
+        return error_response(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            message=ErrorMessage(detail=f"Issue in querying data for user_id:{user_id}")
+            )
+    else:
+        log.debug(f"User info for id: {user_id}, is: {user}")
+        return user
+
+
+@router.post("/", responses={
+    200: {"model": UserDbData},
+    500: {"model": ErrorMessage}
+})
+def add_user(payload: UserData, db_session: Session = db_session):
+    """Route adds a new user into db"""
+    log.info(f"Trying to create a user with payload: {payload}")
+    user: UserDbData
+    try:
+        user = UserService(db_session).add_user(payload)
+    except UserIdDataException:
+        log.error(f"User_id generation issues for payload:{payload}")
+        return error_response(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            message=ErrorMessage(detail=f"User_id generation issues for payload:{payload}")
+            )
+    except UserWriteException:
+        log.error(f"Issue in updating db for payload:{payload}")
+        return error_response(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            message=ErrorMessage(detail=f"Issue in updating db for payload:{payload}")
+            )
     return user
