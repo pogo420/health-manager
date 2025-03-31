@@ -1,1 +1,1 @@
-python health-manager/server.py
+python health_manager/server.py

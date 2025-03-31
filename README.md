@@ -19,10 +19,11 @@ REST API for managing health.
 
 ## Dev setup:
 - First time:
-   - python -m venv .venv
-   - pip install poetry
-   - poetry intall
+   - `python -m venv .venv`
+   - `source .venv/bin/activate`
+- To add dependency: poetry add <dependency_name>
 - To start server: `./run_server.sh`
+- To do UT: `./run_ut.sh`
 
 ## Roadmap/TODO:
 - Security features.
