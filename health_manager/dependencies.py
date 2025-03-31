@@ -21,4 +21,5 @@ def get_api_settings() -> Settings:
 
 
 def get_db_session() -> Session:
+    """Function provides db session as dependency"""
     return session()

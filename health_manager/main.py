@@ -22,7 +22,7 @@ async def lifespan(app: FastAPI):
     # DB initialization
     init_db()
     yield
-    # DB session removal
+    # Server closure activities below
     pass
 
 app = FastAPI(
@@ -36,12 +36,13 @@ app_info: AppInfo = Depends(get_app_info)
 
 
 @app.get("/")
-async def root(app_info: AppInfo = app_info):
+def root(app_info: AppInfo = app_info):
     """Root endpoint of the rest server"""
     log.debug("Handling root request")
     return {
         "message": f"Welcome to {app_info.app_name}, version:{app_info.app_version}, env:{app_info.app_env}"
         }
+
 
 # Including routes
 app.include_router(user.routes.router)

@@ -1,5 +1,6 @@
 """File containing database connection logics"""
 
+from contextlib import contextmanager
 from sqlmodel import SQLModel, Session, create_engine
 from config import get_settings
 from user.models import User  # noqa: F401; Required to create tables
@@ -14,7 +15,8 @@ def init_db():
     SQLModel.metadata.create_all(engine)
 
 
+@contextmanager
 def session():
     """Creates the db session for all commits"""
-    with Session(engine) as session:
-        yield session
+    with Session(engine, autocommit=False, autoflush=False) as session:
+        yield session  # single session for each request
