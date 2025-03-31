@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     app_version: str
     app_env: AppEnv
     log_level: LogLevel
+    db_url: str
     model_config = SettingsConfigDict(env_file=".env")
 
 

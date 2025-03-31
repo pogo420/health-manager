@@ -1,6 +1,8 @@
-"""Global rest api dependencies
+"""Global rest api dependencies.
 """
-from config import get_settings
+from sqlmodel import Session
+from config import Settings, get_settings
+from database import session
 from schemas import AppInfo
 
 
@@ -11,3 +13,12 @@ def get_app_info() -> AppInfo:
                        app_version=settings.app_version,
                        app_env=settings.app_env)
     return app_info
+
+
+def get_api_settings() -> Settings:
+    """Function to provide rest server settings"""
+    return get_settings()
+
+
+def get_db_session() -> Session:
+    return session()
