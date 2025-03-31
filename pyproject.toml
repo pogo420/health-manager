@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "health-manager"
+version = "0.1.0"
+description = ""
+authors = ["Arnab Mukherjee <am0072008@gmail.com>"]
+readme = "README.md"
+
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.12"
+uvicorn = "^0.34.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
