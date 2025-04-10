@@ -1,7 +1,7 @@
 # Db plan v1
 
 - There will be three tables:
-   - User(UserId, UserName, Gender, Height, Age)
+   - User(UserId, UserName, Gender, Height, BirthYear)
    - Steps(UserId, StartDt, EndDt, Steps)
    - Weight(UserId, Dt, Weight)
 
