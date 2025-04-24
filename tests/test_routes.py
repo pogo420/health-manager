@@ -4,11 +4,16 @@ from health_manager.main import app
 from fastapi.testclient import TestClient
 from unittest.mock import patch
 from health_manager.user.exceptions import (
+    UserIdDataException,
     UserInvalidException,
-    UserReadException
+    UserReadException,
+    UserWriteException
     )
-from tests.data import validUserDataFromServer, get_user_valid_response
-import pytest
+from tests.data import (
+    validUserDataFromServer,
+    get_user_valid_response,
+    validUserDataPayload
+    )
 
 client = TestClient(app)
 
@@ -47,25 +52,34 @@ def test_user_get_valid_response(mock_get_user):
     assert response.json() == get_user_valid_response
 
 
-@pytest.mark.skip
-def test_invalid_user_id_generation():
+@patch('health_manager.user.service.UserService.add_user')
+def test_invalid_user_id_generation(mock_user_add):
     """Test cases for invalid user id generation.
     Route should return error response
     """
-    pass
+    mock_user_add.side_effect = UserIdDataException
+    response = client.post("/user", content=validUserDataPayload.model_dump_json())
+    assert response.status_code == 500
+    assert response.json() is not None
 
 
-@pytest.mark.skip
-def test_issue_in_adding_user_into_db():
+@patch('health_manager.user.service.UserService.add_user')
+def test_issue_in_adding_user_into_db(mock_user_add):
     """Test cases for write query issues.
     Route should return error response
     """
-    pass
+    mock_user_add.side_effect = UserWriteException
+    response = client.post("/user", content=validUserDataPayload.model_dump_json())
+    assert response.status_code == 500
+    assert response.json() is not None
 
 
-@pytest.mark.skip
-def test_valid_adding_user_into_db():
+@patch('health_manager.user.service.UserService.add_user')
+def test_valid_adding_user_into_db(mock_user_add):
     """Test cases for valid write case.
     Route should return written data for user
     """
-    pass
+    mock_user_add.return_value = validUserDataFromServer
+    response = client.post("/user", content=validUserDataPayload.model_dump_json())
+    assert response.status_code == 200
+    assert response.json() == get_user_valid_response
