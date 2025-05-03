@@ -52,8 +52,8 @@ class UserRepository:
                 user_data_raw: Optional[User] = db_session\
                     .query(User).where(User.user_id == user_id).one_or_none()
             except Exception as e:
-                log.debug(f"Issue in reading user_id:{user_id}")
-                raise UserReadException(f"Issue in reading user_id:{user_id}, details:{e}")
+                log.error(f"Issue in reading user_id:{user_id}, details:{e}")
+                raise UserReadException(f"Issue in reading user_id:{user_id}")
             # If no user info
             if user_data_raw is None:
                 log.debug(f"User with user_id:{user_id} not found.")
@@ -86,8 +86,8 @@ class UserRepository:
                 log.debug(f"Trying to add user data: {user} into db")
                 db_session.add(user)
             except Exception as e:
-                log.debug(f"Issue in adding user data: {user} into db")
-                raise UserWriteException(f"issue in writing user_id:{user_id}, details:{e}")
+                log.error(f"Issue in adding user data: {user} into db, details:{e}")
+                raise UserWriteException(f"issue in writing user_id:{user_id}")
             else:
                 db_session.commit()
                 db_session.refresh(user)
@@ -104,6 +104,7 @@ class UserRepository:
             None
 
         Raises:
+            UserInvalidException: If user do not exist in db.
             UserDeleteException: Any issues in deleting data.
         """
         with self._session as db_session:
@@ -111,11 +112,18 @@ class UserRepository:
                 # attempting delete
                 log.debug(f"Deleting user with user_id:{user_id}")
                 user_data_raw: Optional[User] = db_session\
-                    .exec(User.where(User.user_id == user_id)).one_or_none()
-                db_session.delete(user_data_raw)
+                    .query(User).where(User.user_id == user_id).one_or_none()
+                if not user_data_raw:
+                    log.error(f"User id: {user_id} do not exist")
+                    raise UserInvalidException(f"User id: {user_id} do not exist")
+                else:
+                    # delete if user is valid
+                    db_session.delete(user_data_raw)
+            except UserInvalidException:
+                raise
             except Exception as e:
-                log.debug(f"Issue in deleting user with user_id:{user_id}")
-                raise UserDeleteException(f"User with user_id:{user_id}, could not be deleted, details: {e}")
+                log.error(f"Issue in deleting user with user_id:{user_id}, could not be deleted, details: {e}")
+                raise UserDeleteException(f"User with user_id:{user_id}, could not be deleted")
             else:
                 # commiting if delete sucessful
                 db_session.commit()

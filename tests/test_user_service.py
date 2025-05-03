@@ -46,3 +46,13 @@ def test_valid_user_id_should_add_user(mock_user_id_gen, mock_add_user):
     UserService(None).add_user(validUserDataPayload)
     # validating for db calls
     mock_add_user.assert_called_once()
+
+
+@pytest.mark.skip
+def test_invalid_user_id_in_delete():
+    pass
+
+
+@pytest.mark.skip
+def test_valid_user_id_in_delete():
+    pass

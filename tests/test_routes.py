@@ -1,5 +1,6 @@
 """Test cases collection of API routes
 """
+import pytest
 from health_manager.main import app
 from fastapi.testclient import TestClient
 from unittest.mock import patch
@@ -83,3 +84,18 @@ def test_valid_adding_user_into_db(mock_user_add):
     response = client.post("/user", content=validUserDataPayload.model_dump_json())
     assert response.status_code == 200
     assert response.json() == get_user_valid_response
+
+
+@pytest.mark.skip
+def test_invalid_user_delete():
+    pass
+
+
+@pytest.mark.skip
+def test_valid_user_delete():
+    pass
+
+
+@pytest.mark.skip
+def test_query_issues_in_delete():
+    pass

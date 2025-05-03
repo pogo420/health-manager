@@ -10,9 +10,9 @@ TODO:
 """
 from fastapi import APIRouter, Depends, status
 from sqlmodel import Session
-from health_manager.schemas import ErrorMessage
-from health_manager.utils import error_response
-from health_manager.user.exceptions import (UserIdDataException,
+from health_manager.schemas import ErrorMessage, SuccessMessage
+from health_manager.utils import error_response, success_response
+from health_manager.user.exceptions import (UserDeleteException, UserIdDataException,
                                             UserInvalidException,
                                             UserReadException,
                                             UserWriteException)
@@ -83,3 +83,32 @@ def add_user(payload: UserData, db_session: Session = db_session):
             message=ErrorMessage(detail=f"Issue in updating db for payload:{payload}")
             )
     return user
+
+
+@router.delete("/{user_id}", responses={
+    200: {"model": SuccessMessage},
+    404: {"model": ErrorMessage},
+    500: {"model": ErrorMessage}
+})
+def delete_user(user_id: str, db_session: Session = db_session):
+    """Endpoint to delete a user"""
+    try:
+        UserService(db_session).delete_user(user_id=user_id)
+    except UserDeleteException:
+        log.error(f"Not able to delete the user id: {user_id}")
+        return error_response(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            message=ErrorMessage(detail=f"Issue in querying data for user_id:{user_id}")
+            )
+    except UserInvalidException:
+        log.error(f"User_id:{user_id} do not exist.")
+        return error_response(
+            status_code=status.HTTP_404_NOT_FOUND,
+            message=ErrorMessage(detail=f"User_id:{user_id} do not exist.")
+            )
+    else:
+        # if no issues
+        return success_response(
+            status_code=status.HTTP_200_OK,
+            message=SuccessMessage(detail=f"User_id:{user_id} deleted")
+        )

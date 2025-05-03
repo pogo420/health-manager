@@ -29,3 +29,8 @@ class AppInfo(BaseModel):
 class ErrorMessage(BaseModel):
     """Structure of all error message in application"""
     detail: str
+
+
+class SuccessMessage(BaseModel):
+    """Structure of all generic success message in application"""
+    detail: str

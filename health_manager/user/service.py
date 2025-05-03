@@ -55,10 +55,12 @@ class UserService:
             None
 
         Raises:
-            UserReadException: Any issues in qerying user id.
             UserDeleteException: Any issues in deleting data.
             UserInvalidException: If user do not exist or invalid.
         """
+        if user_id.strip() == "":
+            logger.error("User id is not valid")
+            raise UserInvalidException("User id is not valid")
         return UserRepository(session=self._session).delete_user(user_id)
 
     def add_user(self, user_data: UserData) -> UserDbData:

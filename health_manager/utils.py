@@ -9,3 +9,10 @@ def error_response(status_code: int, message: BaseModel) -> JSONResponse:
         content=jsonable_encoder(message),
         status_code=status_code
     )
+
+
+def success_response(status_code: int, message: BaseModel) -> JSONResponse:
+    return JSONResponse(
+        content=jsonable_encoder(message),
+        status_code=status_code
+    )
