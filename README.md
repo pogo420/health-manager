@@ -17,6 +17,15 @@ REST API for managing health.
 ## Current dev:
 - Current plan [docs](./docs/v1/plan_v1.md)
 
+## Dev setup:
+- First time:
+   - Create venv: `python -m venv .venv`
+   - Activate venv `source .venv/bin/activate`
+   - Install project `poetry install`
+- To add dependency: poetry add <dependency_name>
+- To start server: `./run_server.sh`
+- To do UT: `./run_ut.sh`
+
 ## Roadmap/TODO:
 - Security features.
 - Rate limiting.
