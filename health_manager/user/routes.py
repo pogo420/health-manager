@@ -5,8 +5,6 @@ Currently we have sync endpoints for:
 
 TODO:
     - updating user route.
-    - deleting user data.
-    - adding user.
 """
 from fastapi import APIRouter, Depends, status
 from sqlmodel import Session

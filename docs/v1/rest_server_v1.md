@@ -11,7 +11,7 @@
 | Models | Stores query, header and Db DTO|
 
 TODOs:
-- Delete user UT
 - Update user
-- Description in swagger fields.
-- Deployment setup - R&D (Low).
+- Steps endpoints
+- Weight endpoints
+- Report endpoints

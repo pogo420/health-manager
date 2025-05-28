@@ -48,11 +48,15 @@ def test_valid_user_id_should_add_user(mock_user_id_gen, mock_add_user):
     mock_add_user.assert_called_once()
 
 
-@pytest.mark.skip
 def test_invalid_user_id_in_delete():
-    pass
+    """UT for invalid user in delete
+    """
+    with pytest.raises(UserInvalidException):
+        UserService(None).delete_user("")
 
 
-@pytest.mark.skip
-def test_valid_user_id_in_delete():
-    pass
+@patch("health_manager.user.service.UserRepository.delete_user")
+def test_valid_user_id_in_delete(mock_delete_user):
+    """UT for valid user in delete, should not return exception"""
+    mock_delete_user.return_value = None
+    UserService(None).delete_user("summy-12345")

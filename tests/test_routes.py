@@ -1,10 +1,10 @@
 """Test cases collection of API routes
 """
-import pytest
 from health_manager.main import app
 from fastapi.testclient import TestClient
 from unittest.mock import patch
 from health_manager.user.exceptions import (
+    UserDeleteException,
     UserIdDataException,
     UserInvalidException,
     UserReadException,
@@ -86,16 +86,31 @@ def test_valid_adding_user_into_db(mock_user_add):
     assert response.json() == get_user_valid_response
 
 
-@pytest.mark.skip
-def test_invalid_user_delete():
-    pass
+@patch('health_manager.user.service.UserService.delete_user')
+def test_invalid_user_delete(mock_user_delete):
+    """Test case for invalid user should return correct response code
+    """
+    mock_user_delete.side_effect = UserInvalidException
+    response = client.delete("/user/dummy1234")
+    assert response.status_code == 404
+    assert response.json() is not None
 
 
-@pytest.mark.skip
-def test_valid_user_delete():
-    pass
+@patch('health_manager.user.service.UserService.delete_user')
+def test_valid_user_delete(mock_user_delete):
+    """Test case for valid user should return correct response code
+    """
+    mock_user_delete.return_value = None
+    response = client.delete("/user/dummy1234")
+    assert response.status_code == 200
+    assert response.json() is not None
 
 
-@pytest.mark.skip
-def test_query_issues_in_delete():
-    pass
+@patch('health_manager.user.service.UserService.delete_user')
+def test_query_issues_in_delete(mock_user_delete):
+    """Test case for delete failure with correct response code
+    """
+    mock_user_delete.side_effect = UserDeleteException
+    response = client.delete("/user/dummy1234")
+    assert response.status_code == 500
+    assert response.json() is not None
