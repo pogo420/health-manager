@@ -1,6 +1,6 @@
 """Global rest api dependencies.
 """
-from sqlmodel import Session
+from sqlalchemy.orm import Session
 from health_manager.config import Settings, get_settings
 from health_manager.database import session
 from health_manager.schemas import AppInfo

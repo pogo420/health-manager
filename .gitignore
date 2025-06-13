@@ -178,3 +178,7 @@ cython_debug/
 
 # Local db
 db
+
+# Memray related files
+memray-flamegraph-results.html
+results.bin

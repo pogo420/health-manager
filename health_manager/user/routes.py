@@ -7,7 +7,7 @@ TODO:
     - updating user route.
 """
 from fastapi import APIRouter, Depends, status
-from sqlmodel import Session
+from sqlalchemy.orm import Session
 from health_manager.schemas import ErrorMessage, SuccessMessage
 from health_manager.utils import error_response, success_response
 from health_manager.user.exceptions import (UserDeleteException, UserIdDataException,
